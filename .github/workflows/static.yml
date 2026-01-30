@@ -1,0 +1,32 @@
+name: Deploy Landing Page
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Atualizar Site no Desktop
+    runs-on: self-hosted
+
+    steps:
+      - name: 1. Baixar código do GitHub
+        uses: actions/checkout@v4
+
+      - name: 2. Copiar arquivos para a pasta TesteGiHubRunner
+        shell: powershell
+        run: |
+          # Novo caminho que você escolheu
+          $destino = "C:\Users\Aida\Desktop\TesteGiHubRunner"
+          
+          # Garante que a pasta exista
+          if (!(Test-Path $destino)) {
+              New-Item -ItemType Directory -Force -Path $destino
+          }
+
+          # Copia os arquivos ignorando a pasta .git
+          Copy-Item -Path ".\*" -Destination $destino -Recurse -Force -Exclude ".git*"
+          
+      - name: 3. Status Final
+        run: echo "Arquivos copiados para o Desktop com sucesso!"
